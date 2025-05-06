@@ -3,60 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="estilo.css">
-    <title>Portal HRAEI - IMSS Bienestar</title>
-    
-    <script>
-        // Script simple para mostrar/ocultar modales (solo para presentación)
-        document.addEventListener('DOMContentLoaded', function() {
-            const showModalBtns = document.querySelectorAll('.show-modal-btn');
-            const closeModalBtns = document.querySelectorAll('.close-modal');
-            const modals = document.querySelectorAll('.modal');
-            
-            showModalBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const modalId = btn.getAttribute('data-modal');
-                    document.getElementById(modalId).classList.add('show-modal');
-                });
-            });
-            
-            closeModalBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    btn.closest('.modal').classList.remove('show-modal');
-                });
-            });
-            
-            // Cerrar modal al hacer clic fuera
-            modals.forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        modal.classList.remove('show-modal');
-                    }
-                });
-            });
-        });
-    </script>
+    <title>Configuración | HRAEI - IMSS Bienestar</title>
+    <link rel="stylesheet" href="configuracion.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="configuracion.js"></script>
 </head>
 <body>
-    <header>
-    <div class="container header-content">
-        <div class="logo-container">
-            <img src="https://raw.githubusercontent.com/bryan911/udesodi-administrador/main/Logo%20HRAEI.png" alt="Logo HRAEI" class="logo">
-            <div>
-                <h1 class="site-title">HRAEI - IMSS Bienestar</h1>
-                <p class="site-subtitle">Portal de Investigación Científica</p>
-            </div>
-        </div>
-        <div class="user-info">
-            <div class="user-avatar">AD</div>
-            <div>
-                <p class="user-name">Admin HRAEI</p>
-                <small>Administrador</small>
-            </div>
-        </div>
-    </div>
-</header>
 
+    <script>
+        // Script para la página de configuración
+document.addEventListener('DOMContentLoaded', function() {
+    // Funcionalidad para mostrar/ocultar modales
+    const showModalBtns = document.querySelectorAll('.show-modal-btn');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+    const modals = document.querySelectorAll('.modal');
+    
+    showModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modalId = btn.getAttribute('data-modal');
+            document.getElementById(modalId).classList.add('show-modal');
+        });
+    });
+    
+    closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            btn.closest('.modal').classList.remove('show-modal');
+        });
+    });
+    
+    // Cerrar modal al hacer clic fuera
+    modals.forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('show-modal');
+            }
+        });
+    });
+
+    // Alternar pestañas en configuración
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Desactivar todas las pestañas
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Activar la pestaña seleccionada
+            this.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+    
+    // Previsualización de colores en tiempo real
+    const colorInputs = document.querySelectorAll('input[type="text"][value^="#"]');
+    
+    colorInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            const colorPreview = this.nextElementSibling;
+            if (colorPreview && colorPreview.classList.contains('color-preview')) {
+                colorPreview.style.backgroundColor = this.value;
+            }
+        });
+    });
+    
+    // Formulario de usuarios - validación
+    const userForm = document.querySelector('#modal-user form');
+    
+    if (userForm) {
+        userForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('user-password').value;
+            const confirmPassword = document.getElementById('user-password-confirm').value;
+            
+            if (password !== confirmPassword) {
+                alert('Las contraseñas no coinciden. Por favor, verifique.');
+                return false;
+            }
+            
+            // Simulación de guardado exitoso
+            alert('Usuario guardado correctamente');
+            document.querySelector('#modal-user .close-modal').click();
+        });
+    }
+    
+    // Mostrar confirmación al guardar cambios
+    const saveButtons = document.querySelectorAll('.action-buttons .btn:not(.btn-secondary)');
+    
+    saveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Simulación de guardado
+            setTimeout(() => {
+                alert('Cambios guardados correctamente');
+            }, 500);
+        });
+    });
+    
+    // Simulación de creación de copia de seguridad
+    const backupButton = document.querySelector('#backup-tab .btn:first-child');
+    
+    if (backupButton) {
+        backupButton.addEventListener('click', function() {
+            const backupArea = document.querySelector('#backup-tab .backup-card').parentElement;
+            
+            // Mostrar mensaje de progreso
+            const progressMsg = document.createElement('div');
+            progressMsg.className = 'backup-card';
+            progressMsg.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Creando copia de seguridad...</p>';
+            backupArea.insertBefore(progressMsg, backupArea.firstChild);
+            
+            // Simular finalización después de 2 segundos
+            setTimeout(() => {
+                progressMsg.remove();
+                
+                const newBackup = document.createElement('div');
+                newBackup.className = 'backup-card';
+                
+                const now = new Date();
+                const formattedDate = now.toLocaleString('es-MX');
+                const fileName = 'backup_hraei_' + 
+                    now.getFullYear() + 
+                    ('0' + (now.getMonth() + 1)).slice(-2) + 
+                    ('0' + now.getDate()).slice(-2) + '_' +
+                    ('0' + now.getHours()).slice(-2) +
+                    ('0' + now.getMinutes()).slice(-2) +
+                    ('0' + now.getSeconds()).slice(-2) + '.zip';
+                
+                newBackup.innerHTML = `
+                    <div class="backup-info">
+                        <div>
+                            <strong>${fileName}</strong>
+                            <p class="backup-date">${formattedDate} - 43.1 MB</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm"><i class="fas fa-download"></i> Descargar</button>
+                            <button class="btn btn-sm btn-secondary"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                `;
+                
+                backupArea.insertBefore(newBackup, backupArea.firstChild);
+                
+                alert('Copia de seguridad creada correctamente');
+            }, 2000);
+        });
+    }
+    
+    // Manipulación de tabla de usuarios
+    const userEditButtons = document.querySelectorAll('#users-tab .btn');
+    
+    userEditButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const userName = row.cells[0].textContent;
+            
+            // Abrir modal de usuario con datos pre-cargados
+            const userModal = document.getElementById('modal-user');
+            userModal.querySelector('#user-name').value = userName.split(' ')[0] || '';
+            userModal.querySelector('#user-lastname').value = userName.split(' ')[1] || '';
+            userModal.querySelector('#user-email').value = row.cells[1].textContent;
+            
+            // Seleccionar el rol adecuado
+            const roleSelect = userModal.querySelector('#user-role');
+            const userRole = row.cells[2].textContent.toLowerCase();
+            
+            for (let i = 0; i < roleSelect.options.length; i++) {
+                if (roleSelect.options[i].text.toLowerCase() === userRole) {
+                    roleSelect.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            // Mostrar modal
+            userModal.classList.add('show-modal');
+        });
+    });
+    
+    // Cambio de tema - simulación
+    const themeToggle = document.querySelector('#appearance-tab .toggle-switch input');
+    
+    if (themeToggle) {
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                // Activar tema oscuro - simulación
+                document.body.style.backgroundColor = '#2c2c2c';
+                document.body.style.color = '#e0e0e0';
+                
+                // Alerta informativa
+                setTimeout(() => {
+                    alert('Tema oscuro activado (simulación). En una implementación real, se aplicarían estilos completos.');
+                    
+                    // Revertir cambios después de la demostración
+                    document.body.style.backgroundColor = '';
+                    document.body.style.color = '';
+                    this.checked = false;
+                }, 1000);
+            }
+        });
+    }
+    
+    // Previsualización de cambios de color
+    const primaryColorInput = document.querySelector('input[value="#13322b"]');
+    
+    if (primaryColorInput) {
+        primaryColorInput.addEventListener('change', function() {
+            const color = this.value;
+            
+            // Simulación de aplicación del color (solo para demostración)
+            const elements = document.querySelectorAll('.section-title, .site-title, .tab-button.active');
+            
+            elements.forEach(el => {
+                el.style.color = color;
+            });
+            
+            // Alerta informativa
+            setTimeout(() => {
+                alert('Color actualizado en vista previa (simulación). En una implementación real, se actualizarían las variables CSS.');
+                
+                // Revertir cambios después de la demostración
+                elements.forEach(el => {
+                    el.style.color = '';
+                });
+                
+                this.value = '#13322b';
+                this.nextElementSibling.style.backgroundColor = '#13322b';
+            }, 2000);
+        });
+    }
+});
+    </script>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <img src="https://raw.githubusercontent.com/bryan911/udesodi-administrador/main/Logo%20HRAEI.png" alt="Logo HRAEI" class="logo">
+                <div>
+                    <h1 class="site-title">HRAEI - IMSS Bienestar</h1>
+                    <p class="site-subtitle">Portal de Investigación Científica</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <p class="user-name">Admin HRAEI</p>
+                    <small>Administrador</small>
+                </div>
+            </div>
+        </div>
+    </header>
     
     <nav>
         <div class="container">
@@ -66,7 +264,7 @@
                 <li><a href="#">Protocolos</a></li>
                 <li><a href="#">Archivos</a></li>
                 <li><a href="#">Estadísticas</a></li>
-                <li><a href="#">Administración</a></li>
+                <li><a href="#" class="active">Administración</a></li>
             </ul>
         </div>
     </nav>
@@ -81,7 +279,7 @@
                 <li><a href="#"><i>📂</i> Archivos</a></li>
                 <li><a href="#"><i>⭐</i> Evaluaciones</a></li>
                 <li><a href="#"><i>📈</i> Reportes</a></li>
-                <li><a href="configuracion.html"><i>⚙️</i> Configuración</a></li>
+                <li><a href="configuracion.html" class="active"><i>⚙️</i> Configuración</a></li>
             </ul>
             
             <h3 class="menu-title" style="margin-top: 30px;">Acciones Rápidas</h3>
@@ -95,202 +293,390 @@
         
         <section class="content-area">
             <div class="welcome-card">
-                <h2 class="welcome-title">Bienvenido al Portal de Investigación HRAEI - IMSS Bienestar</h2>
-                <p>Este sistema permite la gestión integral de proyectos de investigación, incluyendo el registro de investigadores, protocolos, archivos, y evaluaciones. Utilice el menú lateral para navegar entre las diferentes secciones.</p>
+                <h2 class="welcome-title">Configuración del Sistema</h2>
+                <p>En esta sección puede configurar los aspectos generales del sistema, gestionar usuarios, copias de seguridad y personalizar la apariencia de la plataforma.</p>
             </div>
             
-          <div class="stats-section">
-    <h2 class="stats-title">Configuración</h2>
-    
-    <!-- Navegación de pestañas de configuración -->
-    <div class="config-tabs">
-        <button class="config-tab" data-target="general-config">General</button>
-        <button class="config-tab" data-target="user-config">Perfil de Usuario</button>
-        <button class="config-tab" data-target="security-config">Seguridad</button>
-        <button class="config-tab" data-target="notif-config">Notificaciones</button>
-        <button class="config-tab" data-target="appearance-config">Apariencia</button>
-        <button class="config-tab" data-target="backup-config">Respaldos</button>
-        <button class="config-tab" data-target="access-config">Control de Acceso</button>
-        <button class="config-tab" data-target="integration-config">Integraciones</button>
-    </div>
-    
-   <div class="stats-section">
-    <h2 class="stats-title">Configuración del Sistema</h2>
-    
-    <div class="config-container">
-        <!-- Apariencia -->
-        <div class="config-block">
-            <h3 class="config-block-title"><i>🎨</i> Apariencia</h3>
-            <div class="form-group">
-                <label class="form-label">Tema del Portal</label>
-                <select class="form-control">
-                    <option selected>Institucional (Verde)</option>
-                    <option>Alto Contraste</option>
-                    <option>Modo Oscuro</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Densidad de Contenido</label>
-                <div class="option-buttons">
-                    <button class="option-btn active">Compacto</button>
-                    <button class="option-btn">Normal</button>
-                    <button class="option-btn">Amplio</button>
+            <div class="config-container">
+                <div class="config-tabs">
+                    <button class="tab-button active" data-tab="general-tab"><i class="fas fa-cog"></i> General</button>
+                    <button class="tab-button" data-tab="users-tab"><i class="fas fa-users"></i> Usuarios</button>
+                    <button class="tab-button" data-tab="security-tab"><i class="fas fa-shield-alt"></i> Seguridad</button>
+                    <button class="tab-button" data-tab="backup-tab"><i class="fas fa-database"></i> Backup</button>
+                    <button class="tab-button" data-tab="appearance-tab"><i class="fas fa-paint-brush"></i> Apariencia</button>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Notificaciones -->
-        <div class="config-block">
-            <h3 class="config-block-title"><i>🔔</i> Notificaciones</h3>
-            <div class="form-group">
-                <label class="form-label">Correo de Alertas</label>
-                <input type="email" class="form-control" value="admin@hraei.gob.mx">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Alertas Activas</label>
-                <div class="toggle-options">
-                    <div class="toggle-option">
-                        <input type="checkbox" id="notify-protocols" checked>
-                        <label for="notify-protocols">Protocolos Nuevos</label>
-                    </div>
-                    <div class="toggle-option">
-                        <input type="checkbox" id="notify-documents" checked>
-                        <label for="notify-documents">Documentos Pendientes</label>
-                    </div>
-                    <div class="toggle-option">
-                        <input type="checkbox" id="notify-reviews">
-                        <label for="notify-reviews">Revisiones Completadas</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Seguridad -->
-        <div class="config-block">
-            <h3 class="config-block-title"><i>🔒</i> Seguridad</h3>
-            <div class="form-group">
-                <label class="form-label">Cambiar Contraseña</label>
-                <button class="btn">Actualizar Credenciales</button>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Autenticación de Dos Factores</label>
-                <div class="toggle-switch">
-                    <input type="checkbox" id="two-factor" checked>
-                    <label for="two-factor"></label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Tiempo de Sesión</label>
-                <select class="form-control">
-                    <option>15 minutos</option>
-                    <option selected>30 minutos</option>
-                    <option>1 hora</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Exportación -->
-        <div class="config-block">
-            <h3 class="config-block-title"><i>📊</i> Exportación de Datos</h3>
-            <div class="form-group">
-                <label class="form-label">Formato Preferido</label>
-                <div class="option-buttons">
-                    <button class="option-btn active">Excel</button>
-                    <button class="option-btn">PDF</button>
-                    <button class="option-btn">CSV</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Incluir Metadatos</label>
-                <div class="toggle-switch">
-                    <input type="checkbox" id="include-metadata" checked>
-                    <label for="include-metadata"></label>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Preferencias -->
-        <div class="config-block">
-            <h3 class="config-block-title"><i>⚙️</i> Preferencias Generales</h3>
-            <div class="form-group">
-                <label class="form-label">Idioma</label>
-                <select class="form-control">
-                    <option selected>Español (México)</option>
-                    <option>English (US)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Zona Horaria</label>
-                <select class="form-control">
-                    <option selected>(GMT-06:00) Ciudad de México</option>
-                    <option>(GMT-05:00) Hora del Este (US)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Formato de Fecha</label>
-                <select class="form-control">
-                    <option selected>DD/MM/AAAA</option>
-                    <option>MM/DD/AAAA</option>
-                    <option>AAAA-MM-DD</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Permisos -->
-        <div class="config-block">
-            <h3 class="config-block-title"><i>👥</i> Permisos de Usuario</h3>
-            <div class="form-group">
-                <label class="form-label">Nivel de Acceso</label>
-                <select class="form-control" disabled>
-                    <option selected>Administrador</option>
-                    <option>Editor</option>
-                    <option>Visualizador</option>
-                </select>
-                <small class="form-help">Contacte al administrador para cambiar su nivel de acceso</small>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Gestionar Usuarios</label>
-                <button class="btn">Administrar Perfiles</button>
-            </div>
-        </div>
-        
-        <!-- Respaldos -->
-        <div class="config-block">
-            <h3 class="config-block-title"><i>💾</i> Respaldos</h3>
-            <div class="form-group">
-                <label class="form-label">Último Respaldo</label>
-                <div class="info-display">05/05/2025 - 02:00 hrs</div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Respaldo Manual</label>
-                <button class="btn">Generar Respaldo</button>
-            </div>
-        </div>
-        
-        <!-- Auditoría -->
-        <div class="config-block">
-            <h3 class="config-block-title"><i>📝</i> Registro de Auditoría</h3>
-            <div class="form-group">
-                <label class="form-label">Actividad del Sistema</label>
-                <button class="btn">Ver Registro de Actividad</button>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Periodo de Retención</label>
-                <select class="form-control">
-                    <option>30 días</option>
-                    <option selected>90 días</option>
-                    <option>1 año</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    
-    <div class="form-buttons">
-        <button type="button" class="btn btn-secondary">Restaurar Valores</button>
-        <button type="button" class="btn">Guardar Configuración</button>
-    </div>
-</div>
+                
+                <!-- Pestaña General -->
+                <div id="general-tab" class="tab-content active">
+                    <h3 class="section-title">Configuración General</h3>
                     
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Nombre de la Institución</p>
+                            <p class="config-description">Nombre oficial que aparecerá en el portal y reportes</p>
+                        </div>
+                        <input type="text" class="form-control" value="HRAEI - IMSS Bienestar" style="width: 300px;">
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Correo de Contacto</p>
+                            <p class="config-description">Correo electrónico para notificaciones y contacto</p>
+                        </div>
+                        <input type="email" class="form-control" value="contacto@hraei.gob.mx" style="width: 300px;">
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Zona Horaria</p>
+                            <p class="config-description">Zona horaria para registro de actividades</p>
+                        </div>
+                        <select class="form-control" style="width: 300px;">
+                            <option value="america_mexico_city">América/Ciudad de México (UTC-6)</option>
+                            <option value="america_tijuana">América/Tijuana (UTC-7)</option>
+                            <option value="america_cancun">América/Cancún (UTC-5)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Período de Inactividad (minutos)</p>
+                            <p class="config-description">Tiempo de inactividad antes de cerrar sesión automáticamente</p>
+                        </div>
+                        <input type="number" class="form-control" value="30" min="5" max="120" style="width: 100px;">
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Enviar notificaciones por correo</p>
+                            <p class="config-description">Activar envío de notificaciones por correo electrónico</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn">Guardar Cambios</button>
+                        <button class="btn btn-secondary">Restaurar Valores Predeterminados</button>
+                    </div>
+                </div>
+                
+                <!-- Pestaña Usuarios -->
+                <div id="users-tab" class="tab-content">
+                    <h3 class="section-title">Gestión de Usuarios</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn show-modal-btn" data-modal="modal-user">
+                            <i class="fas fa-user-plus"></i> Agregar Usuario
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="table" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Correo Electrónico</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Último Acceso</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Admin HRAEI</td>
+                                    <td>admin@hraei.gob.mx</td>
+                                    <td>Administrador</td>
+                                    <td><span style="color: var(--success);">Activo</span></td>
+                                    <td>Hoy, 10:45 am</td>
+                                    <td>
+                                        <button class="btn btn-sm">Editar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Carlos Ramírez</td>
+                                    <td>carlos.ramirez@hraei.gob.mx</td>
+                                    <td>Investigador</td>
+                                    <td><span style="color: var(--success);">Activo</span></td>
+                                    <td>Ayer, 15:30 pm</td>
+                                    <td>
+                                        <button class="btn btn-sm">Editar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dra. Laura Fernández</td>
+                                    <td>laura.fernandez@hraei.gob.mx</td>
+                                    <td>Revisor</td>
+                                    <td><span style="color: var(--success);">Activo</span></td>
+                                    <td>12/04/2025, 09:15 am</td>
+                                    <td>
+                                        <button class="btn btn-sm">Editar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Pestaña Seguridad -->
+                <div id="security-tab" class="tab-content">
+                    <h3 class="section-title">Configuración de Seguridad</h3>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Longitud mínima de contraseña</p>
+                            <p class="config-description">Número mínimo de caracteres para contraseñas</p>
+                        </div>
+                        <input type="number" class="form-control" value="8" min="6" max="16" style="width: 100px;">
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Complejidad de contraseña</p>
+                            <p class="config-description">Requerir mayúsculas, números y caracteres especiales</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Caducidad de contraseña (días)</p>
+                            <p class="config-description">Días antes de requerir cambio de contraseña</p>
+                        </div>
+                        <input type="number" class="form-control" value="90" min="30" max="365" style="width: 100px;">
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Intentos de inicio de sesión</p>
+                            <p class="config-description">Número de intentos antes de bloquear cuenta</p>
+                        </div>
+                        <input type="number" class="form-control" value="5" min="3" max="10" style="width: 100px;">
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Verificación de dos factores</p>
+                            <p class="config-description">Activar autenticación de dos factores para todos los usuarios</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Registro de auditoría</p>
+                            <p class="config-description">Activar registro detallado de actividades en el sistema</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn">Guardar Cambios</button>
+                        <button class="btn btn-secondary">Restaurar Valores Predeterminados</button>
+                    </div>
+                </div>
+                
+                <!-- Pestaña Backup -->
+                <div id="backup-tab" class="tab-content">
+                    <h3 class="section-title">Copias de Seguridad</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn">
+                            <i class="fas fa-plus-circle"></i> Crear Nueva Copia de Seguridad
+                        </button>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 15px;">Copias de Seguridad Recientes</h4>
+                    
+                    <div class="backup-card">
+                        <div class="backup-info">
+                            <div>
+                                <strong>backup_hraei_20250505_103045.zip</strong>
+                                <p class="backup-date">05/05/2025 10:30:45 - 42.3 MB</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm"><i class="fas fa-download"></i> Descargar</button>
+                                <button class="btn btn-sm btn-secondary"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="backup-card">
+                        <div class="backup-info">
+                            <div>
+                                <strong>backup_hraei_20250428_235912.zip</strong>
+                                <p class="backup-date">28/04/2025 23:59:12 - 41.8 MB</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm"><i class="fas fa-download"></i> Descargar</button>
+                                <button class="btn btn-sm btn-secondary"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="backup-card">
+                        <div class="backup-info">
+                            <div>
+                                <strong>backup_hraei_20250421_235915.zip</strong>
+                                <p class="backup-date">21/04/2025 23:59:15 - 40.5 MB</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm"><i class="fas fa-download"></i> Descargar</button>
+                                <button class="btn btn-sm btn-secondary"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin: 20px 0 15px;">Programación de Copias Automáticas</h4>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Copias de seguridad automáticas</p>
+                            <p class="config-description">Activar creación automática de copias de seguridad</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Frecuencia</p>
+                            <p class="config-description">Frecuencia de creación de copias automáticas</p>
+                        </div>
+                        <select class="form-control" style="width: 200px;">
+                            <option value="daily">Diaria</option>
+                            <option value="weekly" selected>Semanal</option>
+                            <option value="monthly">Mensual</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Hora de ejecución</p>
+                            <p class="config-description">Hora del día para realizar la copia automática</p>
+                        </div>
+                        <input type="time" class="form-control" value="23:59" style="width: 200px;">
+                    </div>
+                    
+                    <div class="config-item">
+                        <div>
+                            <p class="config-label">Retención (días)</p>
+                            <p class="config-description">Días que se conservarán las copias antes de eliminarlas</p>
+                        </div>
+                        <input type="number" class="form-control" value="30" min="7" max="365" style="width: 100px;">
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn">Guardar Cambios</button>
+                    </div>
+                </div>
+                
+                <!-- Pestaña Apariencia -->
+                <div id="appearance-tab" class="tab-content">
+                    <h3 class="section-title">Personalización de Apariencia</h3>
+                    
+                    <div class="config-grid">
+                        <div>
+                            <div class="config-item">
+                                <div>
+                                    <p class="config-label">Color Principal</p>
+                                    <p class="config-description">Color primario del tema</p>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <input type="text" class="form-control" value="#13322b" style="width: 100px;">
+                                    <div class="color-preview" style="background-color: #13322b;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="config-item">
+                                <div>
+                                    <p class="config-label">Color Secundario</p>
+                                    <p class="config-description">Color secundario/acento del tema</p>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <input type="text" class="form-control" value="#8C304C" style="width: 100px;">
+                                    <div class="color-preview" style="background-color: #8C304C;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="config-item">
+                                <div>
+                                    <p class="config-label">Color de Acento</p>
+                                    <p class="config-description">Color para elementos destacados</p>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <input type="text" class="form-control" value="#34B96F" style="width: 100px;">
+                                    <div class="color-preview" style="background-color: #34B96F;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="config-item">
+                                <div>
+                                    <p class="config-label">Logotipo</p>
+                                    <p class="config-description">Imagen del logotipo institucional</p>
+                                </div>
+                                <button class="btn btn-sm">Cambiar Logo</button>
+                            </div>
+                            
+                            <div class="config-item">
+                                <div>
+                                    <p class="config-label">Fuente Principal</p>
+                                    <p class="config-description">Tipografía utilizada en textos</p>
+                                </div>
+                                <select class="form-control" style="width: 200px;">
+                                    <option value="montserrat" selected>Montserrat</option>
+                                    <option value="roboto">Roboto</option>
+                                    <option value="opensans">Open Sans</option>
+                                    <option value="lato">Lato</option>
+                                </select>
+                            </div>
+                            
+                            <div class="config-item">
+                                <div>
+                                    <p class="config-label">Tema Oscuro</p>
+                                    <p class="config-description">Activar modo oscuro en la interfaz</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4 class="section-title">Vista Previa</h4>
+                        <div style="background-color: #f8f9fa; border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: center;">
+                            <p style="margin-bottom: 10px; color: #666;">Vista previa del tema no disponible</p>
+                            <button class="btn btn-sm">Ver Vista Previa</button>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn">Guardar Cambios</button>
+                        <button class="btn btn-secondary">Restaurar Tema Predeterminado</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
     <footer>
         <div class="container footer-content">
             <div>
@@ -305,33 +691,42 @@
         </div>
     </footer>
     
-    <!-- Modal Agregar Investigador -->
-    <div class="modal" id="modal-researcher">
+    <!-- Modal Agregar Usuario -->
+    <div class="modal" id="modal-user">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Agregar Nuevo Investigador</h2>
+                <h2 class="modal-title">Agregar Nuevo Usuario</h2>
                 <button class="close-modal">&times;</button>
             </div>
             <form>
                 <div class="form-group">
-                    <label for="researcher-name" class="form-label">Nombre Completo</label>
-                    <input type="text" id="researcher-name" class="form-control" placeholder="Ej. Dr. Juan Pérez González">
+                    <label for="user-name" class="form-label">Nombre</label>
+                    <input type="text" id="user-name" class="form-control" placeholder="Nombre del usuario">
                 </div>
                 <div class="form-group">
-                    <label for="researcher-email" class="form-label">Correo Electrónico</label>
-                    <input type="email" id="researcher-email" class="form-control" placeholder="ejemplo@hraei.gob.mx">
+                    <label for="user-lastname" class="form-label">Apellido</label>
+                    <input type="text" id="user-lastname" class="form-control" placeholder="Apellido del usuario">
                 </div>
                 <div class="form-group">
-                    <label for="researcher-id" class="form-label">Número de Empleado</label>
-                    <input type="text" id="researcher-id" class="form-control" placeholder="Ej. INV-12345">
+                    <label for="user-email" class="form-label">Correo Electrónico</label>
+                    <input type="email" id="user-email" class="form-control" placeholder="usuario@hraei.gob.mx">
                 </div>
                 <div class="form-group">
-                    <label for="researcher-specialty" class="form-label">Especialidad</label>
-                    <input type="text" id="researcher-specialty" class="form-control" placeholder="Ej. Cardiología">
+                    <label for="user-role" class="form-label">Rol</label>
+                    <select id="user-role" class="form-control">
+                        <option value="">Seleccione un rol</option>
+                        <option value="admin">Administrador</option>
+                        <option value="investigator">Investigador</option>
+                        <option value="reviewer">Revisor</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="researcher-department" class="form-label">Departamento</label>
-                    <input type="text" id="researcher-department" class="form-control" placeholder="Ej. Medicina Interna">
+                    <label for="user-password" class="form-label">Contraseña</label>
+                    <input type="password" id="user-password" class="form-control" placeholder="Contraseña">
+                </div>
+                <div class="form-group">
+                    <label for="user-password-confirm" class="form-label">Confirmar Contraseña</label>
+                    <input type="password" id="user-password-confirm" class="form-control" placeholder="Confirmar contraseña">
                 </div>
                 <div class="form-buttons">
                     <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
@@ -340,125 +735,5 @@
             </form>
         </div>
     </div>
-    
-    <!-- Modal Nuevo Protocolo -->
-    <div class="modal" id="modal-protocol">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Registro de Nuevo Protocolo</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label for="protocol-title" class="form-label">Título del Protocolo</label>
-                    <input type="text" id="protocol-title" class="form-control" placeholder="Ej. Estudio sobre la prevalencia de...">
-                </div>
-                <div class="form-group">
-                    <label for="protocol-researcher" class="form-label">Investigador Principal</label>
-                    <input type="text" id="protocol-researcher" class="form-control" placeholder="Seleccione un investigador">
-                </div>
-                <div class="form-group">
-                    <label for="protocol-type" class="form-label">Tipo de Investigación</label>
-                    <select id="protocol-type" class="form-control">
-                        <option value="">Seleccione una opción</option>
-                        <option value="clinical">Clínica</option>
-                        <option value="basic">Básica</option>
-                        <option value="epidemiological">Epidemiológica</option>
-                        <option value="translational">Traslacional</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="protocol-summary" class="form-label">Resumen del Protocolo</label>
-                    <textarea id="protocol-summary" class="form-control" rows="4" placeholder="Breve descripción del protocolo..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="protocol-date" class="form-label">Fecha Estimada de Inicio</label>
-                    <input type="date" id="protocol-date" class="form-control">
-                </div>
-                <div class="form-buttons">
-                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
-                    <button type="button" class="btn">Registrar Protocolo</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Modal Subir Archivo -->
-    <div class="modal" id="modal-upload">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Subir Nuevo Archivo</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label for="upload-title" class="form-label">Título del Documento</label>
-                    <input type="text" id="upload-title" class="form-control" placeholder="Ej. Informe Preliminar - Fase 1">
-                </div>
-                <div class="form-group">
-                    <label for="upload-protocol" class="form-label">Protocolo Relacionado</label>
-                    <input type="text" id="upload-protocol" class="form-control" placeholder="Seleccione un protocolo">
-                </div>
-                <div class="form-group">
-                    <label for="upload-type" class="form-label">Tipo de Documento</label>
-                    <select id="upload-type" class="form-control">
-                        <option value="">Seleccione una opción</option>
-                        <option value="protocol">Protocolo</option>
-                        <option value="report">Informe</option>
-                        <option value="consent">Consentimiento Informado</option>
-                        <option value="amendment">Enmienda</option>
-                        <option value="other">Otro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="upload-file" class="form-label">Seleccionar Archivo</label>
-                    <input type="file" id="upload-file" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="upload-comments" class="form-label">Comentarios</label>
-                    <textarea id="upload-comments" class="form-control" rows="3" placeholder="Comentarios adicionales sobre el archivo..."></textarea>
-                </div>
-                <div class="form-buttons">
-                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
-                    <button type="button" class="btn">Subir Archivo</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Modal Revisar Documento -->
-    <div class="modal" id="modal-review">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Revisión de Documento</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label for="review-document" class="form-label">Documento a Revisar</label>
-                    <select id="review-document" class="form-control">
-                        <option value="">Seleccione un documento</option>
-                        <option value="doc1">Protocolo: Estudio sobre tratamientos en pacientes con...</option>
-                        <option value="doc2">Informe: Resultados preliminares - Estudio fase 2</option>
-                        <option value="doc3">Enmienda: Modificación de criterios de inclusión</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="review-score" class="form-label">Calificación General</label>
-                    <select id="review-score" class="form-control">
-                        <option value="">Seleccione una calificación</option>
-                        <option value="5">5 - Excelente</option>
-                        <option value="4">4 - Muy Bueno</option>
-                        <option value="3">3 - Bueno</option>
-                        <option value="2">2 - Regular</option>
-                        <option value="1">1 - Insuficiente</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="review-comments" class="form-label">Comentarios de la Revisión</label>
-                    <textarea id="review-comments" class="form-control" rows="5" placeholder="Detalle sus observaciones, sugerencias o correcciones..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Estado Final</label>
-                    <div style="display: flex; gap: 15px; margin-top: 5px;">
-                        <label style="display: flex; align-items:
+</body>
+</html>
