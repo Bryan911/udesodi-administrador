@@ -75,7 +75,7 @@
         <aside class="sidebar">
             <h3 class="menu-title">Menú Principal</h3>
             <ul class="menu-list">
-                <li><a href="#"><i>📊</i> Dashboard</a></li>
+                <li><a href="index.html"><i>📊</i> Dashboard</a></li>
                 <li><a href="#"><i>👥</i> Investigadores</a></li>
                 <li><a href="#"><i>📝</i> Protocolos</a></li>
                 <li><a href="#"><i>📂</i> Archivos</a></li>
@@ -114,38 +114,118 @@
         <button class="config-tab" data-target="integration-config">Integraciones</button>
     </div>
     
-    <!-- Sección Configuración General -->
-    <div id="general-config" class="config-section">
-        <h3 class="section-subtitle">Configuración General</h3>
-        <p class="section-desc">Configure los parámetros básicos del sistema</p>
-        
-        <form class="config-form">
+   <div class="stats-section">
+    <h2 class="stats-title">Configuración del Sistema</h2>
+    
+    <div class="config-container">
+        <!-- Apariencia -->
+        <div class="config-block">
+            <h3 class="config-block-title"><i>🎨</i> Apariencia</h3>
             <div class="form-group">
-                <label class="form-label">Nombre de la Institución</label>
-                <input type="text" class="form-control" value="HRAEI - IMSS Bienestar" placeholder="Nombre completo de la institución">
+                <label class="form-label">Tema del Portal</label>
+                <select class="form-control">
+                    <option selected>Institucional (Verde)</option>
+                    <option>Alto Contraste</option>
+                    <option>Modo Oscuro</option>
+                </select>
             </div>
-            
+            <div class="form-group">
+                <label class="form-label">Densidad de Contenido</label>
+                <div class="option-buttons">
+                    <button class="option-btn active">Compacto</button>
+                    <button class="option-btn">Normal</button>
+                    <button class="option-btn">Amplio</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notificaciones -->
+        <div class="config-block">
+            <h3 class="config-block-title"><i>🔔</i> Notificaciones</h3>
+            <div class="form-group">
+                <label class="form-label">Correo de Alertas</label>
+                <input type="email" class="form-control" value="admin@hraei.gob.mx">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Alertas Activas</label>
+                <div class="toggle-options">
+                    <div class="toggle-option">
+                        <input type="checkbox" id="notify-protocols" checked>
+                        <label for="notify-protocols">Protocolos Nuevos</label>
+                    </div>
+                    <div class="toggle-option">
+                        <input type="checkbox" id="notify-documents" checked>
+                        <label for="notify-documents">Documentos Pendientes</label>
+                    </div>
+                    <div class="toggle-option">
+                        <input type="checkbox" id="notify-reviews">
+                        <label for="notify-reviews">Revisiones Completadas</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seguridad -->
+        <div class="config-block">
+            <h3 class="config-block-title"><i>🔒</i> Seguridad</h3>
+            <div class="form-group">
+                <label class="form-label">Cambiar Contraseña</label>
+                <button class="btn">Actualizar Credenciales</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Autenticación de Dos Factores</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="two-factor" checked>
+                    <label for="two-factor"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tiempo de Sesión</label>
+                <select class="form-control">
+                    <option>15 minutos</option>
+                    <option selected>30 minutos</option>
+                    <option>1 hora</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Exportación -->
+        <div class="config-block">
+            <h3 class="config-block-title"><i>📊</i> Exportación de Datos</h3>
+            <div class="form-group">
+                <label class="form-label">Formato Preferido</label>
+                <div class="option-buttons">
+                    <button class="option-btn active">Excel</button>
+                    <button class="option-btn">PDF</button>
+                    <button class="option-btn">CSV</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Incluir Metadatos</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="include-metadata" checked>
+                    <label for="include-metadata"></label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Preferencias -->
+        <div class="config-block">
+            <h3 class="config-block-title"><i>⚙️</i> Preferencias Generales</h3>
+            <div class="form-group">
+                <label class="form-label">Idioma</label>
+                <select class="form-control">
+                    <option selected>Español (México)</option>
+                    <option>English (US)</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label class="form-label">Zona Horaria</label>
                 <select class="form-control">
                     <option selected>(GMT-06:00) Ciudad de México</option>
-                    <option>(GMT-05:00) Bogotá</option>
-                    <option>(GMT-03:00) Buenos Aires</option>
-                    <option>(GMT+01:00) Madrid</option>
-                    <option>(GMT+00:00) UTC</option>
+                    <option>(GMT-05:00) Hora del Este (US)</option>
                 </select>
             </div>
-            
-            <div class="form-group">
-                <label class="form-label">Idioma del Sistema</label>
-                <select class="form-control">
-                    <option selected>Español</option>
-                    <option>English</option>
-                    <option>Português</option>
-                    <option>Français</option>
-                </select>
-            </div>
-            
             <div class="form-group">
                 <label class="form-label">Formato de Fecha</label>
                 <select class="form-control">
@@ -154,17 +234,60 @@
                     <option>AAAA-MM-DD</option>
                 </select>
             </div>
-            
+        </div>
+        
+        <!-- Permisos -->
+        <div class="config-block">
+            <h3 class="config-block-title"><i>👥</i> Permisos de Usuario</h3>
             <div class="form-group">
-                <label class="form-label">Correo de Contacto Institucional</label>
-                <input type="email" class="form-control" value="contacto@hraei.gob.mx" placeholder="Correo electrónico de contacto">
+                <label class="form-label">Nivel de Acceso</label>
+                <select class="form-control" disabled>
+                    <option selected>Administrador</option>
+                    <option>Editor</option>
+                    <option>Visualizador</option>
+                </select>
+                <small class="form-help">Contacte al administrador para cambiar su nivel de acceso</small>
             </div>
-            
-            <div class="form-buttons">
-                <button type="button" class="btn btn-secondary">Restaurar Valores</button>
-                <button type="submit" class="btn">Guardar Cambios</button>
+            <div class="form-group">
+                <label class="form-label">Gestionar Usuarios</label>
+                <button class="btn">Administrar Perfiles</button>
             </div>
-        </form>
+        </div>
+        
+        <!-- Respaldos -->
+        <div class="config-block">
+            <h3 class="config-block-title"><i>💾</i> Respaldos</h3>
+            <div class="form-group">
+                <label class="form-label">Último Respaldo</label>
+                <div class="info-display">05/05/2025 - 02:00 hrs</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Respaldo Manual</label>
+                <button class="btn">Generar Respaldo</button>
+            </div>
+        </div>
+        
+        <!-- Auditoría -->
+        <div class="config-block">
+            <h3 class="config-block-title"><i>📝</i> Registro de Auditoría</h3>
+            <div class="form-group">
+                <label class="form-label">Actividad del Sistema</label>
+                <button class="btn">Ver Registro de Actividad</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Periodo de Retención</label>
+                <select class="form-control">
+                    <option>30 días</option>
+                    <option selected>90 días</option>
+                    <option>1 año</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-buttons">
+        <button type="button" class="btn btn-secondary">Restaurar Valores</button>
+        <button type="button" class="btn">Guardar Configuración</button>
     </div>
 </div>
                     
