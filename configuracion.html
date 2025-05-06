@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal HRAEI - IMSS Bienestar</title>
+    <style>
+        :root {
+            --primary: #13322b;
+            --secondary: #8C304C;
+            --accent: #34B96F;
+            --light: #f5f5f5;
+            --dark: #333;
+            --border: #dee2e6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: white;
+            border-bottom: 5px solid var(--accent);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 70px;
+            margin-right: 20px;
+        }
+        
+        .site-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .site-subtitle {
+            font-size: 18px;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        nav {
+            background-color: var(--primary);
+            padding: 10px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .main-content {
+            padding: 30px 0;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .menu-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        
+        .menu-list {
+            list-style: none;
+        }
+        
+        .menu-list li {
+            margin-bottom: 10px;
+        }
+        
+        .menu-list a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark);
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+        
+        .menu-list a:hover {
+            background-color: #f0f0f0;
+            color: var(--primary);
+        }
+        
+        .menu-list i {
+            font-size: 18px;
+            color: var(--secondary);
+        }
+        
+        .content-area {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .welcome-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .welcome-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .dashboard-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard-card i {
+            font-size: 36px;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .dashboard-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .dashboard-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #0d241f;
+        }
+        
+        .stats-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stats-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 15px;
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        /* Simulación de gráficas */
+        .bar-chart {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .bar {
+            flex: 1;
+            background-color: var(--secondary);
+            position: relative;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .bar:nth-child(2n) {
+            background-color: var(--accent);
+        }
+        
+        .bar::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--dark);
+        }
+        
+        .pie-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--primary) 0% 35%,
+                var(--secondary) 35% 60%,
+                var(--accent) 60% 80%,
+                #6c757d 80% 100%
+            );
+            margin: 0 auto;
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        .pie-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Estilos para modales y otras páginas */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(19, 50, 43, 0.2);
+        }
+        
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Añadir efecto para mostrar el modal cuando se hace clic */
+        .show-modal {
+            display: flex;
+        }
+    </style>
+    <script>
+        // Script simple para mostrar/ocultar modales (solo para presentación)
+        document.addEventListener('DOMContentLoaded', function() {
+            const showModalBtns = document.querySelectorAll('.show-modal-btn');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            const modals = document.querySelectorAll('.modal');
+            
+            showModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modalId = btn.getAttribute('data-modal');
+                    document.getElementById(modalId).classList.add('show-modal');
+                });
+            });
+            
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    btn.closest('.modal').classList.remove('show-modal');
+                });
+            });
+            
+            // Cerrar modal al hacer clic fuera
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('show-modal');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+    <div class="container header-content">
+        <div class="logo-container">
+            <img src="https://raw.githubusercontent.com/bryan911/udesodi-administrador/main/Logo%20HRAEI.png" alt="Logo HRAEI" class="logo">
+            <div>
+                <h1 class="site-title">HRAEI - IMSS Bienestar</h1>
+                <p class="site-subtitle">Portal de Investigación Científica</p>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">AD</div>
+            <div>
+                <p class="user-name">Admin HRAEI</p>
+                <small>Administrador</small>
+            </div>
+        </div>
+    </div>
+</header>
+
+    
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Investigadores</a></li>
+                <li><a href="#">Protocolos</a></li>
+                <li><a href="#">Archivos</a></li>
+                <li><a href="#">Estadísticas</a></li>
+                <li><a href="#">Administración</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container main-content">
+        <aside class="sidebar">
+            <h3 class="menu-title">Menú Principal</h3>
+            <ul class="menu-list">
+                <li><a href="#"><i>📊</i> Dashboard</a></li>
+                <li><a href="#"><i>👥</i> Investigadores</a></li>
+                <li><a href="#"><i>📝</i> Protocolos</a></li>
+                <li><a href="#"><i>📂</i> Archivos</a></li>
+                <li><a href="#"><i>⭐</i> Evaluaciones</a></li>
+                <li><a href="#"><i>📈</i> Reportes</a></li>
+                <li><a href="configuracion.html"><i>⚙️</i> Configuración</a></li>
+            </ul>
+            
+            <h3 class="menu-title" style="margin-top: 30px;">Acciones Rápidas</h3>
+            <ul class="menu-list">
+                <li><a href="#" class="show-modal-btn" data-modal="modal-researcher"><i>➕</i> Agregar Investigador</a></li>
+                <li><a href="#" class="show-modal-btn" data-modal="modal-protocol"><i>➕</i> Nuevo Protocolo</a></li>
+                <li><a href="#" class="show-modal-btn" data-modal="modal-upload"><i>⬆️</i> Subir Archivo</a></li>
+                <li><a href="#" class="show-modal-btn" data-modal="modal-review"><i>✅</i> Revisar Documento</a></li>
+            </ul>
+        </aside>
+        
+        <section class="content-area">
+            <div class="welcome-card">
+                <h2 class="welcome-title">Bienvenido al Portal de Investigación HRAEI - IMSS Bienestar</h2>
+                <p>Este sistema permite la gestión integral de proyectos de investigación, incluyendo el registro de investigadores, protocolos, archivos, y evaluaciones. Utilice el menú lateral para navegar entre las diferentes secciones.</p>
+            </div>
+            
+            <div class="stats-section">
+                <h2 class="stats-title">Estadísticas de Actividad</h2>
+                <div class="stats-grid">
+                    <div class="chart-container">
+                        <h3 class="chart-title">Protocolos por Estado</h3>
+                        <div class="bar-chart">
+                            <div class="bar" style="height: 80%;" data-label="Aprobados"></div>
+                            <div class="bar" style="height: 45%;" data-label="En Revisión"></div>
+                            <div class="bar" style="height: 30%;" data-label="Pendientes"></div>
+                            <div class="bar" style="height: 15%;" data-label="Rechazados"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3 class="chart-title">Distribución por Área de Investigación</h3>
+                        <div class="pie-chart"></div>
+                        <div class="pie-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: var(--primary);"></div>
+                                <span>Clínica (35%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: var(--secondary);"></div>
+                                <span>Epidemiológica (25%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: var(--accent);"></div>
+                                <span>Básica (20%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #6c757d;"></div>
+                                <span>Otras (20%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container footer-content">
+            <div>
+                <p>&copy; 2025 HRAEI - IMSS Bienestar. Todos los derechos reservados.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Contacto</a>
+                <a href="#">Ayuda</a>
+                <a href="#">Términos de Uso</a>
+                <a href="#">Aviso de Privacidad</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Modal Agregar Investigador -->
+    <div class="modal" id="modal-researcher">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Agregar Nuevo Investigador</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="researcher-name" class="form-label">Nombre Completo</label>
+                    <input type="text" id="researcher-name" class="form-control" placeholder="Ej. Dr. Juan Pérez González">
+                </div>
+                <div class="form-group">
+                    <label for="researcher-email" class="form-label">Correo Electrónico</label>
+                    <input type="email" id="researcher-email" class="form-control" placeholder="ejemplo@hraei.gob.mx">
+                </div>
+                <div class="form-group">
+                    <label for="researcher-id" class="form-label">Número de Empleado</label>
+                    <input type="text" id="researcher-id" class="form-control" placeholder="Ej. INV-12345">
+                </div>
+                <div class="form-group">
+                    <label for="researcher-specialty" class="form-label">Especialidad</label>
+                    <input type="text" id="researcher-specialty" class="form-control" placeholder="Ej. Cardiología">
+                </div>
+                <div class="form-group">
+                    <label for="researcher-department" class="form-label">Departamento</label>
+                    <input type="text" id="researcher-department" class="form-control" placeholder="Ej. Medicina Interna">
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="button" class="btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal Nuevo Protocolo -->
+    <div class="modal" id="modal-protocol">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Registro de Nuevo Protocolo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="protocol-title" class="form-label">Título del Protocolo</label>
+                    <input type="text" id="protocol-title" class="form-control" placeholder="Ej. Estudio sobre la prevalencia de...">
+                </div>
+                <div class="form-group">
+                    <label for="protocol-researcher" class="form-label">Investigador Principal</label>
+                    <input type="text" id="protocol-researcher" class="form-control" placeholder="Seleccione un investigador">
+                </div>
+                <div class="form-group">
+                    <label for="protocol-type" class="form-label">Tipo de Investigación</label>
+                    <select id="protocol-type" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="clinical">Clínica</option>
+                        <option value="basic">Básica</option>
+                        <option value="epidemiological">Epidemiológica</option>
+                        <option value="translational">Traslacional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="protocol-summary" class="form-label">Resumen del Protocolo</label>
+                    <textarea id="protocol-summary" class="form-control" rows="4" placeholder="Breve descripción del protocolo..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="protocol-date" class="form-label">Fecha Estimada de Inicio</label>
+                    <input type="date" id="protocol-date" class="form-control">
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="button" class="btn">Registrar Protocolo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal Subir Archivo -->
+    <div class="modal" id="modal-upload">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Subir Nuevo Archivo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="upload-title" class="form-label">Título del Documento</label>
+                    <input type="text" id="upload-title" class="form-control" placeholder="Ej. Informe Preliminar - Fase 1">
+                </div>
+                <div class="form-group">
+                    <label for="upload-protocol" class="form-label">Protocolo Relacionado</label>
+                    <input type="text" id="upload-protocol" class="form-control" placeholder="Seleccione un protocolo">
+                </div>
+                <div class="form-group">
+                    <label for="upload-type" class="form-label">Tipo de Documento</label>
+                    <select id="upload-type" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="protocol">Protocolo</option>
+                        <option value="report">Informe</option>
+                        <option value="consent">Consentimiento Informado</option>
+                        <option value="amendment">Enmienda</option>
+                        <option value="other">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="upload-file" class="form-label">Seleccionar Archivo</label>
+                    <input type="file" id="upload-file" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="upload-comments" class="form-label">Comentarios</label>
+                    <textarea id="upload-comments" class="form-control" rows="3" placeholder="Comentarios adicionales sobre el archivo..."></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="button" class="btn">Subir Archivo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal Revisar Documento -->
+    <div class="modal" id="modal-review">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Revisión de Documento</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="review-document" class="form-label">Documento a Revisar</label>
+                    <select id="review-document" class="form-control">
+                        <option value="">Seleccione un documento</option>
+                        <option value="doc1">Protocolo: Estudio sobre tratamientos en pacientes con...</option>
+                        <option value="doc2">Informe: Resultados preliminares - Estudio fase 2</option>
+                        <option value="doc3">Enmienda: Modificación de criterios de inclusión</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="review-score" class="form-label">Calificación General</label>
+                    <select id="review-score" class="form-control">
+                        <option value="">Seleccione una calificación</option>
+                        <option value="5">5 - Excelente</option>
+                        <option value="4">4 - Muy Bueno</option>
+                        <option value="3">3 - Bueno</option>
+                        <option value="2">2 - Regular</option>
+                        <option value="1">1 - Insuficiente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="review-comments" class="form-label">Comentarios de la Revisión</label>
+                    <textarea id="review-comments" class="form-control" rows="5" placeholder="Detalle sus observaciones, sugerencias o correcciones..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado Final</label>
+                    <div style="display: flex; gap: 15px; margin-top: 5px;">
+                        <label style="display: flex; align-items:
