@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolos | HRAEI - IMSS Bienestar</title>
+    <link rel="icon" href="LogoHRAEI2.png" type="image/png">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="protocolos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="protocolos.js" defer></script>
+</head>
+<body>
+    <script>
+    // Script para la página de protocolos
+document.addEventListener('DOMContentLoaded', function() {
+    // Funcionalidad para mostrar/ocultar modales
+    const showModalBtns = document.querySelectorAll('.show-modal-btn');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+    const modals = document.querySelectorAll('.modal');
+    
+    showModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modalId = btn.getAttribute('data-modal');
+            document.getElementById(modalId).classList.add('show-modal');
+        });
+    });
+    
+    closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            btn.closest('.modal').classList.remove('show-modal');
+        });
+    });
+    
+    // Cerrar modal al hacer clic fuera
+    modals.forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('show-modal');
+            }
+        });
+    });
+
+    // Funcionalidad para los botones de acción en la tabla
+    const viewButtons = document.querySelectorAll('.view-btn');
+    const editButtons = document.querySelectorAll('.edit-btn');
+    const filesButtons = document.querySelectorAll('.files-btn');
+
+    // Ver detalles de protocolo
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const protocolId = row.cells[0].textContent;
+            const protocolTitle = row.cells[1].textContent;
+            const protocolResearcher = row.cells[2].textContent;
+            const protocolType = row.cells[3].textContent;
+            const protocolDate = row.cells[4].textContent;
+            const protocolStatus = row.cells[5].innerHTML;
+            
+            // Actualizar el modal con los datos del protocolo
+            document.getElementById('detail-id').textContent = protocolId;
+            document.getElementById('detail-title').textContent = protocolTitle;
+            document.getElementById('detail-researcher').textContent = protocolResearcher;
+            document.getElementById('detail-type').textContent = protocolType;
+            document.getElementById('detail-date').textContent = protocolDate;
+            document.getElementById('detail-status').innerHTML = protocolStatus;
+            
+            // Mostrar el modal
+            document.getElementById('modal-protocol-details').classList.add('show-modal');
+        });
+    });
+
+    // Editar protocolo
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const protocolId = row.cells[0].textContent;
+            const protocolTitle = row.cells[1].textContent;
+            const protocolResearcher = row.cells[2].textContent;
+            const protocolType = row.cells[3].textContent;
+            const protocolDate = row.cells[4].textContent;
+            
+            // Simulación: Abrir el modal de edición con los datos precargados
+            const modalProtocol = document.getElementById('modal-protocol');
+            modalProtocol.querySelector('#protocol-title').value = protocolTitle;
+            
+            // Seleccionar el investigador adecuado en el select
+            const researcherSelect = modalProtocol.querySelector('#protocol-researcher');
+            for (let i = 0; i < researcherSelect.options.length; i++) {
+                if (researcherSelect.options[i].text === protocolResearcher) {
+                    researcherSelect.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            // Seleccionar el tipo adecuado en el select
+            const typeSelect = modalProtocol.querySelector('#protocol-type');
+            const typeValue = protocolType.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            for (let i = 0; i < typeSelect.options.length; i++) {
+                if (typeSelect.options[i].value === typeValue) {
+                    typeSelect.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            // Formato de fecha para el input date (YYYY-MM-DD)
+            const dateParts = protocolDate.split('/');
+            if (dateParts.length === 3) {
+                const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                modalProtocol.querySelector('#protocol-date').value = formattedDate;
+            }
+            
+            // Actualizar título del modal
+            modalProtocol.querySelector('.modal-title').textContent = 'Editar Protocolo';
+            
+            // Cambiar texto del botón de envío
+            const submitButton = modalProtocol.querySelector('button[type="submit"]');
+            submitButton.textContent = 'Guardar Cambios';
+            
+            // Mostrar el modal
+            modalProtocol.classList.add('show-modal');
+        });
+    });
+
+    // Ver archivos del protocolo
+    filesButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const protocolId = row.cells[0].textContent;
+            const protocolTitle = row.cells[1].textContent;
+            
+            // Simulación: Mostrar alerta indicando que se abrirá la sección de archivos
+            alert(`Abriendo archivos del protocolo: ${protocolTitle} (${protocolId})\n\nEn una implementación real, esta acción redirigiría a la página de archivos filtrada por este protocolo.`);
+        });
+    });
+
+    // Funcionalidad de búsqueda
+    const searchInput = document.getElementById('protocol-search');
+    searchInput.addEventListener('input', filterProtocols);
+    
+    // Funcionalidad de filtrado
+    const statusFilter = document.getElementById('filter-status');
+    const investigatorFilter = document.getElementById('filter-investigator');
+    
+    statusFilter.addEventListener('change', filterProtocols);
+    investigatorFilter.addEventListener('change', filterProtocols);
+    
+    function filterProtocols() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        const investigatorValue = investigatorFilter.value;
+        
+        const rows = document.querySelectorAll('.protocols-table tbody tr');
+        
+        rows.forEach(row => {
+            const id = row.cells[0].textContent.toLowerCase();
+            const title = row.cells[1].textContent.toLowerCase();
+            const researcher = row.cells[2].textContent.toLowerCase();
+            const type = row.cells[3].textContent.toLowerCase();
+            
+            // Obtener el estado del protocolo
+            const statusBadge = row.cells[5].querySelector('.status-badge');
+            const status = statusBadge ? statusBadge.textContent.toLowerCase() : '';
+            
+            // Filtrar por término de búsqueda
+            const matchesSearch = id.includes(searchTerm) || 
+                                title.includes(searchTerm) || 
+                                researcher.includes(searchTerm) || 
+                                type.includes(searchTerm);
+            
+            // Filtrar por estado
+            const matchesStatus = statusValue === 'todos' || 
+                                status === statusValue;
+            
+            // Filtrar por investigador
+            const matchesInvestigator = investigatorValue === 'todos' || 
+                                        (investigatorValue === '1' && researcher.includes('carlos ramírez')) ||
+                                        (investigatorValue === '2' && researcher.includes('laura fernández')) ||
+                                        (investigatorValue === '3' && researcher.includes('miguel torres')) ||
+                                        (investigatorValue === '4' && researcher.includes('ana lópez'));
+            
+            // Mostrar u ocultar fila según los filtros
+            if (matchesSearch && matchesStatus && matchesInvestigator) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // Actualizar contador de resultados
+        updateResultsCount();
+    }
+    
+    function updateResultsCount() {
+        const visibleRows = document.querySelectorAll('.protocols-table tbody tr:not([style*="display: none"])');
+        const totalRows = document.querySelectorAll('.protocols-table tbody tr');
+        
+        // Actualizar texto de paginación
+        document.querySelector('.pagination-current').textContent = `Mostrando ${visibleRows.length} de ${totalRows.length} protocolos`;
+    }
+
+    // Manejo del formulario de protocolo
+    const protocolForm = document.getElementById('protocol-form');
+    if (protocolForm) {
+        protocolForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validación básica
+            const title = document.getElementById('protocol-title').value;
+            const researcher = document.getElementById('protocol-researcher').value;
+            const type = document.getElementById('protocol-type').value;
+            const summary = document.getElementById('protocol-summary').value;
+            const date = document.getElementById('protocol-date').value;
+            
+            if (!title || !researcher || !type || !summary || !date) {
+                alert('Por favor complete todos los campos requeridos.');
+                return false;
+            }
+            
+            // Simulación de guardado exitoso
+            alert('Protocolo guardado correctamente');
+            
+            // Restaurar el formulario y cerrar el modal
+            this.reset();
+            document.querySelector('#modal-protocol .close-modal').click();
+            
+            // En una implementación real, aquí se enviarían los datos al servidor
+            // y se actualizaría la tabla con el nuevo protocolo
+        });
+    }
+
+    // Inicialización: ejecutar filtrado para mostrar contadores correctos
+    updateResultsCount();
+});
+    </script>
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <img src="https://raw.githubusercontent.com/bryan911/udesodi-administrador/main/Logo%20HRAEI.png" alt="Logo HRAEI" class="logo">
+                <div>
+                    <h1 class="site-title">HRAEI - IMSS Bienestar</h1>
+                    <p class="site-subtitle">Portal de Investigación Científica</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <p class="user-name">Admin HRAEI</p>
+                    <small>Administrador</small>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#">Investigadores</a></li>
+                <li><a href="protocolos.html" class="active">Protocolos</a></li>
+                <li><a href="#">Archivos</a></li>
+                <li><a href="#">Estadísticas</a></li>
+                <li><a href="#">Administración</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container main-content">
+        <aside class="sidebar">
+            <h3 class="menu-title">Menú Principal</h3>
+            <ul class="menu-list">
+                <li><a href="index.html"><i>📊</i> Inicio</a></li>
+                <li><a href="#"><i>👥</i> Investigadores</a></li>
+                <li><a href="protocolos.html" class="active"><i>📝</i> Protocolos</a></li>
+                <li><a href="#"><i>📂</i> Archivos</a></li>
+                <li><a href="#"><i>⭐</i> Evaluaciones</a></li>
+                <li><a href="#"><i>📈</i> Reportes</a></li>
+                <li><a href="configuracion.html"><i>⚙️</i> Configuración</a></li>
+            </ul>
+            
+            <h3 class="menu-title" style="margin-top: 30px;">Acciones Rápidas</h3>
+            <ul class="menu-list">
+                <li><a href="#" class="show-modal-btn" data-modal="modal-researcher"><i>➕</i> Agregar Investigador</a></li>
+                <li><a href="#" class="show-modal-btn" data-modal="modal-protocol"><i>➕</i> Nuevo Protocolo</a></li>
+                <li><a href="#" class="show-modal-btn" data-modal="modal-upload"><i>⬆️</i> Subir Archivo</a></li>
+                <li><a href="#" class="show-modal-btn" data-modal="modal-review"><i>✅</i> Revisar Documento</a></li>
+            </ul>
+        </aside>
+        
+        <section class="content-area">
+            <div class="welcome-card">
+                <h2 class="welcome-title">Gestión de Protocolos de Investigación</h2>
+                <p>Esta sección le permite administrar los protocolos de investigación registrados en el sistema. Puede visualizar, crear, modificar y dar seguimiento a los protocolos activos.</p>
+            </div>
+
+            <div class="protocols-actions">
+                <div class="search-filter">
+                    <div class="search-box">
+                        <input type="text" id="protocol-search" placeholder="Buscar protocolo...">
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="filter-controls">
+                        <select id="filter-status" class="form-control">
+                            <option value="todos">Todos los estados</option>
+                            <option value="aceptado">Aceptado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="rechazado">Rechazado</option>
+                        </select>
+                        <select id="filter-investigator" class="form-control">
+                            <option value="todos">Todos los investigadores</option>
+                            <option value="1">Dr. Carlos Ramírez</option>
+                            <option value="2">Dra. Laura Fernández</option>
+                            <option value="3">Dr. Miguel Torres</option>
+                            <option value="4">Dra. Ana López</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn add-protocol-btn show-modal-btn" data-modal="modal-protocol">
+                    <i class="fas fa-plus-circle"></i> Nuevo Protocolo
+                </button>
+            </div>
+
+            <div class="protocols-table-container">
+                <table class="protocols-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título del Protocolo</th>
+                            <th>Investigador Principal</th>
+                            <th>Tipo</th>
+                            <th>Fecha de Inicio</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PROT-001</td>
+                            <td>Estudio sobre factores de riesgo cardiovascular en pacientes con diabetes tipo 2</td>
+                            <td>Dr. Carlos Ramírez</td>
+                            <td>Clínica</td>
+                            <td>15/01/2025</td>
+                            <td><span class="status-badge status-aceptado">Aceptado</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn view-btn" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn files-btn" title="Archivos"><i class="fas fa-folder"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PROT-002</td>
+                            <td>Prevalencia de enfermedades respiratorias en niños de zonas urbanas</td>
+                            <td>Dr. Miguel Torres</td>
+                            <td>Epidemiológica</td>
+                            <td>22/02/2025</td>
+                            <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn view-btn" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn files-btn" title="Archivos"><i class="fas fa-folder"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PROT-003</td>
+                            <td>Evaluación de nuevos tratamientos para hipertensión arterial</td>
+                            <td>Dra. Laura Fernández</td>
+                            <td>Clínica</td>
+                            <td>10/03/2025</td>
+                            <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn view-btn" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn files-btn" title="Archivos"><i class="fas fa-folder"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PROT-004</td>
+                            <td>Efectos de la contaminación ambiental en el desarrollo de asma infantil</td>
+                            <td>Dra. Ana López</td>
+                            <td>Epidemiológica</td>
+                            <td>05/04/2025</td>
+                            <td><span class="status-badge status-rechazado">Rechazado</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn view-btn" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn files-btn" title="Archivos"><i class="fas fa-folder"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PROT-005</td>
+                            <td>Estudio comparativo de técnicas quirúrgicas mínimamente invasivas</td>
+                            <td>Dr. Carlos Ramírez</td>
+                            <td>Clínica</td>
+                            <td>18/04/2025</td>
+                            <td><span class="status-badge status-aceptado">Aceptado</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn view-btn" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn files-btn" title="Archivos"><i class="fas fa-folder"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PROT-006</td>
+                            <td>Análisis genético de predisposición a enfermedades autoinmunes</td>
+                            <td>Dra. Laura Fernández</td>
+                            <td>Básica</td>
+                            <td>02/05/2025</td>
+                            <td><span class="status-badge status-aceptado">Aceptado</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn view-btn" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn files-btn" title="Archivos"><i class="fas fa-folder"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <button class="pagination-btn" disabled><i class="fas fa-angle-double-left"></i></button>
+                    <button class="pagination-btn" disabled><i class="fas fa-angle-left"></i></button>
+                    <span class="pagination-current">Página 1 de 1</span>
+                    <button class="pagination-btn" disabled><i class="fas fa-angle-right"></i></button>
+                    <button class="pagination-btn" disabled><i class="fas fa-angle-double-right"></i></button>
+                </div>
+            </div>
+
+            <div class="protocol-stats">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="stat-content">
+                        <h3>Total Protocolos</h3>
+                        <p class="stat-value">6</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon approved-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-content">
+                        <h3>Aprobados</h3>
+                        <p class="stat-value">3</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pending-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-content">
+                        <h3>Pendientes</h3>
+                        <p class="stat-value">2</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon rejected-icon"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-content">
+                        <h3>Rechazados</h3>
+                        <p class="stat-value">1</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container footer-content">
+            <div>
+                <p>&copy; 2025 HRAEI - IMSS Bienestar. Todos los derechos reservados.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Contacto</a>
+                <a href="#">Ayuda</a>
+                <a href="#">Términos de Uso</a>
+                <a href="#">Aviso de Privacidad</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Modal Nuevo Protocolo -->
+    <div class="modal" id="modal-protocol">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Registro de Nuevo Protocolo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="protocol-form">
+                <div class="form-group">
+                    <label for="protocol-title" class="form-label">Título del Protocolo</label>
+                    <input type="text" id="protocol-title" class="form-control" placeholder="Ej. Estudio sobre la prevalencia de...">
+                </div>
+                <div class="form-group">
+                    <label for="protocol-researcher" class="form-label">Investigador Principal</label>
+                    <select id="protocol-researcher" class="form-control">
+                        <option value="">Seleccione un investigador</option>
+                        <option value="1">Dr. Carlos Ramírez</option>
+                        <option value="2">Dra. Laura Fernández</option>
+                        <option value="3">Dr. Miguel Torres</option>
+                        <option value="4">Dra. Ana López</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="protocol-type" class="form-label">Tipo de Investigación</label>
+                    <select id="protocol-type" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="clinica">Clínica</option>
+                        <option value="basica">Básica</option>
+                        <option value="epidemiologica">Epidemiológica</option>
+                        <option value="traslacional">Traslacional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="protocol-summary" class="form-label">Resumen del Protocolo</label>
+                    <textarea id="protocol-summary" class="form-control" rows="4" placeholder="Breve descripción del protocolo..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="protocol-date" class="form-label">Fecha Estimada de Inicio</label>
+                    <input type="date" id="protocol-date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Coinvestigadores</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="coinvestigadores" value="1"> Dr. Carlos Ramírez
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="coinvestigadores" value="2"> Dra. Laura Fernández
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="coinvestigadores" value="3"> Dr. Miguel Torres
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="coinvestigadores" value="4"> Dra. Ana López
+                        </label>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="submit" class="btn">Registrar Protocolo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ver Detalles -->
+    <div class="modal" id="modal-protocol-details">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Detalles del Protocolo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="protocol-details">
+                <div class="detail-item">
+                    <h3>ID:</h3>
+                    <p id="detail-id">PROT-001</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Título:</h3>
+                    <p id="detail-title">Estudio sobre factores de riesgo cardiovascular en pacientes con diabetes tipo 2</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Investigador Principal:</h3>
+                    <p id="detail-researcher">Dr. Carlos Ramírez</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Tipo:</h3>
+                    <p id="detail-type">Clínica</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Fecha de Inicio:</h3>
+                    <p id="detail-date">15/01/2025</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Estado:</h3>
+                    <p id="detail-status"><span class="status-badge status-aceptado">Aceptado</span></p>
+                </div>
+                <div class="detail-item full-width">
+                    <h3>Resumen:</h3>
+                    <p id="detail-summary">Investigación sobre los principales factores de riesgo cardiovascular en pacientes con diabetes tipo 2 atendidos en el HRAEI. El estudio evaluará la prevalencia de hipertensión, dislipidemia, obesidad y tabaquismo, así como su asociación con complicaciones cardiovasculares.</p>
+                </div>
+                <div class="detail-item full-width">
+                    <h3>Coinvestigadores:</h3>
+                    <ul id="detail-coinvestigators">
+                        <li>Dra. Laura Fernández</li>
+                        <li>Dr. Miguel Torres</li>
+                    </ul>
+                </div>
+                <div class="detail-item full-width">
+                    <h3>Archivos Relacionados:</h3>
+                    <ul id="detail-files">
+                        <li><a href="#"><i class="fas fa-file-pdf"></i> Protocolo_Completo.pdf</a></li>
+                        <li><a href="#"><i class="fas fa-file-word"></i> Consentimiento_Informado.docx</a></li>
+                        <li><a href="#"><i class="fas fa-file-excel"></i> Datos_Preliminares.xlsx</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button type="button" class="btn btn-secondary close-modal">Cerrar</button>
+                <button type="button" class="btn">Editar Protocolo</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
